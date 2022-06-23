@@ -1,13 +1,12 @@
-var day = moment().format('MMMM do YYYY, h:mm:ss a');
-$("#currentDay").html(day);
+var day = moment().format('dddd, MMMM hh:mm:ss a');
+$("#today").html(day);
 
 $(document).ready(function () {
-
     $(".saveBtn").on("click", function () {
         var content = $(this).siblings(".description").val();
-        var hours = $(this).parent().attr("id");
+        var moment = $(this).parent().attr("id");
 
-        localStorage.setItem(content, hours);
+        localStorage.setItem(moment, content);
     })
 
     $("#hour1 .description").val(localStorage.getItem("hour1"));
@@ -35,4 +34,29 @@ $(document).ready(function () {
     $("#hour23 .description").val(localStorage.getItem("hour23"));
     $("#hour24 .description").val(localStorage.getItem("hour24"));
 
+    blockColor();
+
+    function blockColor() {
+        var currentMoment = moment().hour();
+
+        $(".time-block").each(function () {
+            var sectionTime = parseInt($(this).attr("id").split("hour")[1]);
+
+            if (sectionTime < currentMoment) {
+                $(this).removeClass("present");
+                $(this).removeClass("future");
+                $(this).addClass("past");
+            }
+            else if (sectionTime === currentMoment) {
+                $(this).removeClass("future");
+                $(this).removeClass("past");
+                $(this).addClass("present");
+            }
+            else {
+                $(this).removeClass("past");
+                $(this).removeClass("present");
+                $(this).addClass("future");
+            }
+        })
+    }
 })
